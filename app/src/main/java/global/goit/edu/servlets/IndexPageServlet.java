@@ -6,6 +6,8 @@ import global.goit.edu.database.DatabaseInitService;
 import global.goit.edu.planet.PlanetCrudService;
 import global.goit.edu.planet.PlanetService;
 import global.goit.edu.planet.Planets;
+import global.goit.edu.ticket.Ticket;
+import global.goit.edu.ticket.TicketCrudService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
@@ -26,17 +28,21 @@ public class IndexPageServlet extends HttpServlet {
     private TemplateEngine engine;
     private ClientCrudService clientCrudService;
     private PlanetCrudService planetCrudService;
+    private TicketCrudService ticketCrudService;
 
     @Override
     public void init() throws ServletException {
         resolver = new FileTemplateResolver();
         engine = new TemplateEngine();
         indexPagePath = getServletContext().getRealPath("/templates") + "\\";
+        String dbPath = getServletContext().getRealPath("/db") + "\\" + "space_travel";
         clientCrudService = new ClientCrudService();
         planetCrudService = new PlanetCrudService();
+        ticketCrudService = new TicketCrudService();
 
-        DatabaseInitService.main(null);
-
+        DatabaseInitService.main(
+                new String[] {dbPath}
+        );
     }
 
     @Override
@@ -50,7 +56,8 @@ public class IndexPageServlet extends HttpServlet {
         engine.addTemplateResolver(resolver);
 
         List<PlanetService> planets = new ArrayList<>();
-        List<Client> clients = clientCrudService.getAll();
+        List<Client> clients = clientCrudService.getAllWithTickets();
+        List<Ticket> tickets = ticketCrudService.getAllWithClients();
 
         for (Planets planet : planetCrudService.getAll()) {
             planets.add(PlanetService.builder()
@@ -66,6 +73,7 @@ public class IndexPageServlet extends HttpServlet {
         );
 
         simpleContext.setVariables(Map.of("clients", clients));
+        simpleContext.setVariables(Map.of("tickets", tickets));
 
         engine.process("index", simpleContext, resp.getWriter());
         resp.getWriter().close();

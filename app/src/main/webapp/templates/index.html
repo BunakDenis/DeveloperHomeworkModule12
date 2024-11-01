@@ -85,7 +85,7 @@
   </script>
   <body>
     <section>
-      <h1>Welcome to Space Travel company official cite</h1>
+      <h1>Welcome to official cite of Space Travel company</h1>
       <h2>Planets where you can travel</h2>
       <div class="tbl-header">
         <table cellpadding="0" cellspacing="0" border="0">
@@ -116,6 +116,7 @@
             <tr>
               <th>Client id</th>
               <th>Client name</th>
+              <th>Count tickets</th>
             </tr>
           </thead>
         </table>
@@ -126,10 +127,37 @@
             <tr th:each="client: ${clients}">
               <td th:text="${client.id}">1</td>
               <td th:text="${client.name}">Elon Mask</td>
+              <td th:text="${client.tickets.size()}">1</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
-  </body>
-</html>
+          <h2>All tickets</h2>
+          <div class="tbl-header">
+            <table cellpadding="0" cellspacing="0" border="0">
+              <thead>
+              <tr>
+                <th>Created at</th>
+                <th>Client name</th>
+                <th>From Planet</th>
+                <th>To Planet</th>
+              </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="tbl-content">
+            <table cellpadding="0" cellspacing="0" border="0">
+              <tbody>
+              <tr th:each="ticket: ${tickets}">
+                <td th:text="${ticket.createdAt}">1</td>
+                <td th:text="${ticket.client.getName()}">Elon Mask</td>
+                <td th:text="${ticket.planetServiceFrom.getName()}">Earth</td>
+                <td th:text="${ticket.planetServiceTo.getName()}">Mars</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </body>
+    </html>

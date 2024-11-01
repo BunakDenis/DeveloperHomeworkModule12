@@ -1,10 +1,15 @@
 package global.goit.edu.planet;
 
+import global.goit.edu.ticket.Ticket;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "planetEntity")
 @Table(name = "planet")
 public class PlanetService {
@@ -16,6 +21,16 @@ public class PlanetService {
     @Getter
     @Column(name = "name")
     private String name;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "planetServiceFrom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Ticket> ticketsFromPlanet;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "planetServiceTo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Ticket> ticketsToPlanet;
 
     public PlanetService(String id, String name) {
         if (checkForValidPlanetValue(id)) {
@@ -73,4 +88,13 @@ public class PlanetService {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "PlanetService{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", count tickets to planet= " + ticketsToPlanet.size() +
+                ", count tickets from planet= " + ticketsFromPlanet.size() +
+                '}';
+    }
 }

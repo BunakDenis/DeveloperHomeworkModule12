@@ -1,5 +1,7 @@
 package global.goit.edu.ticket;
 
+import global.goit.edu.client.Client;
+import global.goit.edu.planet.PlanetService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "ticketEntity")
 @Table(name = "ticket")
 public class Ticket {
 
@@ -21,13 +23,25 @@ public class Ticket {
     @Column(name = "created_at")
     private String createdAt;
 
-    @Column(name = "client_id")
-    private long clientId;
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
-    @Column(name = "from_planet_id")
-    private String fromPlanetId;
+    @ManyToOne
+    @JoinColumn(name = "from_planet_id", nullable = false)
+    private PlanetService planetServiceFrom;
 
-    @Column(name = "to_planet_id")
-    private String toPlanetId;
+    @ManyToOne
+    @JoinColumn(name = "to_planet_id", nullable = false)
+    private PlanetService planetServiceTo;
 
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", createdAt='" + createdAt + '\'' +
+                ", fromPlanet=" + planetServiceFrom.getName() +
+                ", toPlanet=" + planetServiceTo.getName() +
+                '}';
+    }
 }
